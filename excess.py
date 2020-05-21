@@ -20,7 +20,7 @@ def download_year_month_data(start_date, end_date):
         json.dump(res.json(), outfile)
 
 def download_full_data():
-    for year in np.arange(2015,2020+1):
+    for year in np.arange(2020,2020+1):
         for month in np.arange(1,12+1):
             _, end_day = calendar.monthrange(year, month)
             start_date = dt.datetime(year, month, 1)
@@ -45,6 +45,7 @@ def read_file(file):
 def read_all_files():
     files = glob.glob('./data/*.json')
     files.sort()
+    files = files[:-1]
 
     data = pd.DataFrame()
     for file in files:
@@ -55,12 +56,14 @@ def read_all_files():
 
 if not len(glob.glob('./data/*.json')):
     download_full_data()
+
 data = read_all_files()
 
 import matplotlib.pyplot as plt
+state = 'SC'
 
 data['month_dec'] = data['year'] + data['month'] / 12
-data = data[data['name'] == 'RJ']
+# data = data[data['name'] == state]
 data = data.groupby(['year', 'month', 'month_dec'])[['total']].sum().reset_index()
 
 
@@ -76,6 +79,6 @@ for year in data['year'].unique():
 ax[1].set(ylabel = 'Registros de óbitos de cada mês')
 ax[1].legend(loc='lower center', ncol=len(data['year'].unique()))
 
-plt.suptitle('Excesso de mortes Brasil')
+plt.suptitle('Excesso de mortes {}'.format(state))
 
 plt.show()
