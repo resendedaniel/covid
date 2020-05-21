@@ -72,7 +72,7 @@ def plot_single_state(covid_data, state, ax):
         ax.plot(sub['d'].apply(lambda x: x.replace(year=2020)), sub['value'], label='Mortes por dia em {}'.format(year), c=colors[year])
 
     ax.set(ylabel='Mortes por dia')
-    # ax.set_ylim(ymin=0)
+    ax.set_ylim(ymin=0)
 
     excess_deaths_abs, excess_deaths_rel, start_ord_d, end_ord_d = calc_excess_death(covid_data)
     excess_deaths_abs = round(excess_deaths_abs/100) * 100
@@ -122,7 +122,11 @@ def plot_region(region):
 
     print(region, n)
     ncols = int((n+1) ** .5)
-    fig, axs = plt.subplots(int(np.ceil(n/ncols)), ncols=ncols, sharex=True, gridspec_kw = {'wspace':.15, 'hspace':.15})
+    fig, axs = plt.subplots(int(np.ceil(n/ncols)),
+                            ncols=ncols,
+                            sharex=True,
+                            gridspec_kw = {'wspace':.15, 'hspace':.15},
+                            figsize=(10.8, 10.8))
     loci = int(np.ceil(n/ncols)) * ncols
     for i in np.arange(loci)[n:]:
         fig.delaxes(axs.flatten()[i])
@@ -156,7 +160,8 @@ def plot_region(region):
     footnote = 'Fonte: Portal Transparência\nDados até {} | Atualizado em {}\nOs cartórios demoram até 3 semanas para informar os dados\nTwitter: @resende451'.format(covid_data['d'].max().strftime('%Y-%m-%d'), dt.datetime.today().strftime('%Y-%m-%d'))
     plt.figtext(.95,0.1, footnote, fontsize=10, va="top", ha="right")
 
-    plt.tight_layout()
+    # plt.tight_layout()
+    # plt.savefig('img/{}.png'.format(region), dpi=100)
     plt.show()
 
 plot_region('worst')
