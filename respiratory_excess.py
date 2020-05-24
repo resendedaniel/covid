@@ -1,3 +1,4 @@
+import os
 import requests
 import pandas as pd
 import numpy as np
@@ -30,6 +31,12 @@ REGION_NAME = {
 for x in STATES.values():
     x.sort()
 
+def create_dirs():
+    for d in ['data', 'processed_data', 'img']:
+        try:
+            os.makedirs(d)
+        except OSError as e:
+            continue
 
 def calc_excess_death(covid_data):
     first_death_ord_d = covid_data.loc[covid_data['d'] == FIRST_DEATH_D, 'ord_d'].values[0]
@@ -112,7 +119,6 @@ def plot_single_state(covid_data, state, ax):
     if state == 'all':
         state = 'Brasil'
     ax.set_title(state.upper())
-    #plt.show()
 
     return ax
 
@@ -160,9 +166,11 @@ def plot_region(region, show=True):
     plt.figtext(.95,0.1, footnote, fontsize=10, va="top", ha="right")
 
     # plt.tight_layout()
-    # plt.savefig('img/{}.png'.format(region), dpi=100)
+    plt.savefig('img/{}.png'.format(region), dpi=100)
     plt.show()
 
+
+create_dirs()
 plot_region('worst', show=True)
 plot_region('brasil', show=True)
 plot_region('s', show=True)
