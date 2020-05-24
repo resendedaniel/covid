@@ -72,7 +72,7 @@ def plot_single_state(covid_data, state, ax):
         ax.plot(sub['d'].apply(lambda x: x.replace(year=2020)), sub['value'], label='Mortes por dia em {}'.format(year), c=colors[year])
 
     ax.set(ylabel='Mortes por dia')
-    ax.set_ylim(ymin=0)
+    # ax.set_ylim(ymin=0)
 
     excess_deaths_abs, excess_deaths_rel, start_ord_d, end_ord_d = calc_excess_death(covid_data)
     excess_deaths_abs = round(excess_deaths_abs/100) * 100
@@ -116,7 +116,7 @@ def plot_single_state(covid_data, state, ax):
 
     return ax
 
-def plot_region(region):
+def plot_region(region, show=True):
     global STATES, REGION_NAME
     n = len(STATES[region])
 
@@ -147,7 +147,6 @@ def plot_region(region):
         ax.get_xaxis().get_offset_text().set_visible(False)
         ax.set_xlabel("")
     for i in np.arange(n):
-        print(i, n, i%n)
         if i % ncols > 0:
             # for label in fig.get_axes()[i].get_yticklabels(which="both"):
             #     label.set_visible(False)
@@ -164,10 +163,10 @@ def plot_region(region):
     # plt.savefig('img/{}.png'.format(region), dpi=100)
     plt.show()
 
-plot_region('worst')
-plot_region('brasil')
-plot_region('s')
-plot_region('se')
-plot_region('co')
-plot_region('ne')
-plot_region('n')
+plot_region('worst', show=True)
+plot_region('brasil', show=True)
+plot_region('s', show=True)
+plot_region('se', show=True)
+plot_region('co', show=True)
+plot_region('ne', show=True)
+plot_region('n', show=True)

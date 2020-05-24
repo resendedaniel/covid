@@ -4,20 +4,26 @@ import os
 import datetime as dt
 import pandas as pd
 
-filename = 'data/transparencia_{}.json'
+raw_filename = 'data/transparencia_{}.json'
+processed_filename = 'processed_data/transparencia_{}.json'
 
 def check_cache(state):
-    return os.path.exists(filename.format(state))
+    return os.path.exists(raw_filename.format(state))
 
 def load_cache(state):
     print('fetching {} data from cache'.format(state))
-    with open(filename.format(state)) as json_file:
+    with open(raw_filename.format(state)) as json_file:
         data = json.load(json_file)
     return data
 
 def save_cache(data, state):
-    with open(filename.format(state), 'w') as outfile:
+    with open(raw_filename.format(state), 'w') as outfile:
         json.dump(data, outfile)
+
+def save_processed(data, state):
+    data = data.copy()
+    data['d'] = data['d'].dt.strftime('%Y-%m-%d')
+    data = data.to_json(processed_filename.format(state), orient='records')
 
 def get_data(state='all'):
     if not check_cache(state):
@@ -27,6 +33,7 @@ def get_data(state='all'):
         data = load_cache(state)
 
     data = process_data(data, state)
+    save_processed(data, state)
 
     return data
 
