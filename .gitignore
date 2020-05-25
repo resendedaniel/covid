@@ -131,4 +131,3 @@ dmypy.json
 *.png
 data*
 img*
-processed_data*
