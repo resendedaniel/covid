@@ -19,27 +19,16 @@ const extract_years = data => ({
 const values = data => data.map(d => d.value);
 const order = data => data.map(d => d.ord_d);
 
-window.addEventListener('load', async function () {
-  const data = await fetch('/data/transparencia_sp.json').then(r => r.json());
-
-  const years = extract_years(data)
-
+window.addEventListener('load', function () {
   const chart = c3.generate({
     bindto: '#chart',
     data: {
+      columns: [],
       xs: {
         '2018': '2018_order',
         '2019': '2019_order',
         '2020': '2020_order',
       },
-      columns: [
-        ['2018', ...values(years['2018'])],
-        ['2018_order', ...order(years['2018'])],
-        ['2019', ...values(years['2019'])],
-        ['2019_order', ...order(years['2019'])],
-        ['2020', ...values(years['2020'])],
-        ['2020_order', ...order(years['2020'])],
-      ],
       colors: {
         '2018': '#A6CEE3',
         '2019': '#2377B4',
@@ -79,5 +68,26 @@ window.addEventListener('load', async function () {
         title: i => `Dia ${i+1}`,
       },
     },
-  });
+  })
+
+  const selector = document.getElementById('state-selector')
+
+  selector.addEventListener('change', async e => {
+    const state = e.target.value;
+
+    const data = await fetch(`/data/transparencia_${state}.json`).then(r => r.json());
+    const years = extract_years(data)
+    chart.load({
+      columns: [
+        ['2018', ...values(years['2018'])],
+        ['2018_order', ...order(years['2018'])],
+        ['2019', ...values(years['2019'])],
+        ['2019_order', ...order(years['2019'])],
+        ['2020', ...values(years['2020'])],
+        ['2020_order', ...order(years['2020'])],
+      ],
+    })
+  })
+
+  selector.dispatchEvent(new Event('change'));
 });
