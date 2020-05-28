@@ -12,7 +12,8 @@ body {
 }
 
 #main {
-  width: 800px;
+  max-width: 800px;
+  min-width: 310;
   margin: 0 auto;
   margin-top: 50px;
 }
