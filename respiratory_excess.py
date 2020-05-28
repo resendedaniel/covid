@@ -140,7 +140,6 @@ def plot_region(region, show=True):
     for ax, i in zip(fig.get_axes()[:n], np.arange(n)):
         state = STATES[region][i]
         covid_data = transp.get_data(state)
-        covid_data = covid_data[:-14]
 
         ax = plot_single_state(covid_data, state, ax)
         # axs[int(i/ncols), i%ncols] = plot_single_state(covid_data, state, axs[int(i/ncols), i%ncols])
@@ -167,7 +166,7 @@ def plot_region(region, show=True):
 
     # plt.tight_layout()
     plt.savefig('img/{}.png'.format(region), dpi=100)
-    plt.show()
+    # plt.show()
 
 
 create_dirs()
