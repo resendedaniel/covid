@@ -38,7 +38,7 @@ def get_data(state='all'):
     return data
 
 
-def fetch_data(start_date='2017-01-01', end_date=dt.datetime.today().strftime('%Y-%m-%d'), state='all'):
+def fetch_data(state='all', start_date='2018-01-01', end_date=dt.datetime.today().strftime('%Y-%m-%d')):
     print('fetching {} data from transparencia.registrocivil.org.br'.format(state))
     client = requests.session()
     client.get('https://transparencia.registrocivil.org.br')
@@ -73,7 +73,7 @@ def fetch_data(start_date='2017-01-01', end_date=dt.datetime.today().strftime('%
         raise ValueError()
 
 
-def process_data(data, state):
+def process_data(data, state, cutoff=14):
     values = []
     for key, row in data.items():
         for x in row.values():
@@ -87,8 +87,6 @@ def process_data(data, state):
     all['year'] = [x.year for x in all['d']]
     all['ord_d'] = all.groupby('year').cumcount()
     all['cumvalue'] = all.groupby('year')[['value']].cumsum()
-    #all = all[all['year'] >= 2019]
-
     all['state'] = state
 
     if state in ['rj', 'mt', 'all']:
@@ -96,4 +94,21 @@ def process_data(data, state):
     if state == 'pr':
         all = all[all['d'] >= dt.datetime(2018,4,1)]
 
+    all = all[:-cutoff]
+
     return all
+
+def download_all_data(cutoff=14):
+    states = [
+        'rs', 'sc', 'pr', 'se',
+        'sp', 'mg', 'es', 'rj',
+        'ms', 'mt', 'go', 'df',
+        'ac', 'am', 'pa', 'rr', 'ro', 'ap', 'to',
+        'ba', 'se', 'al', 'pe', 'pb', 'rn', 'ce', 'ma', 'pi',
+        'all'
+    ]
+    for state in states:
+        raw_data = fetch_data(state)
+        data = process_data(raw_data, state, cutoff=cutoff)
+        save_cache(raw_data, state)
+        save_processed(data, state)
