@@ -14,7 +14,7 @@ STATES = {
     's': ['rs', 'sc', 'pr'],
     'se': ['sp', 'mg', 'es', 'rj'],
     'co': ['ms', 'mt', 'go', 'df'],
-    'n': ['am', 'pa', 'rr', 'ro', 'ap', 'to'],
+    'n': ['ac', 'am', 'pa', 'rr', 'ro', 'ap', 'to'],
     'ne': ['ba', 'se', 'al', 'pe', 'pb', 'rn', 'ce', 'ma', 'pi'],
     'brasil': ['all'],
     'worst': ['am', 'pa', 'ce', 'pe', 'sp', 'rj', 'ma']

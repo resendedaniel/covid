@@ -103,7 +103,7 @@ def download_all_data(cutoff=14):
         'rs', 'sc', 'pr', 'se',
         'sp', 'mg', 'es', 'rj',
         'ms', 'mt', 'go', 'df',
-        'am', 'pa', 'rr', 'ro', 'ap', 'to',
+        'ac', 'am', 'pa', 'rr', 'ro', 'ap', 'to',
         'ba', 'se', 'al', 'pe', 'pb', 'rn', 'ce', 'ma', 'pi',
         'all'
     ]
