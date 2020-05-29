@@ -25,6 +25,12 @@ h1 {
   font-weight: normal;
 }
 
+#explanation {
+  margin-top: 20px;
+  text-align: left;
+  text-indent: 50px;
+}
+
 #footer {
   text-align: right;
 }
