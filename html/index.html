@@ -2,11 +2,11 @@
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <link href="/html/style/c3.min.css" rel="stylesheet">
-    <link href="/html/style/main.css" rel="stylesheet">
-    <script src="/html/js/d3.min.js" charset="utf-8"></script>
-    <script src="/html/js/c3.min.js"></script>
-    <script src="/html/js/main.js"></script>
+    <link href="/style/c3.min.css" rel="stylesheet">
+    <link href="/style/main.css" rel="stylesheet">
+    <script src="/js/d3.min.js" charset="utf-8"></script>
+    <script src="/js/c3.min.js"></script>
+    <script src="/js/main.js"></script>
   </head>
   <body>
     <div id="main">
@@ -49,18 +49,36 @@
         <br/>
         Os cartórios demoram até 3 semanas para informar os dados
       </p>
+      <p id="explanation_title">
+        O que estou vendo?
+      </p>
       <p id="explanation">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-        pretium enim purus, nec lacinia tortor tristique quis. Aliquam quis leo
-        nec urna lacinia convallis nec in risus. Praesent ullamcorper sed ligula
-        nec facilisis. Praesent pharetra eros a viverra aliquet. Vestibulum
-        iaculis sem nisl, eu auctor ex euismod congue. Quisque iaculis odio ex,
-        nec efficitur est dapibus vitae. Suspendisse luctus, dolor eget feugiat
-        rhoncus, sapien tortor posuere dui, vel elementum nulla urna at dui. Sed
-        sed mi feugiat, congue lectus at, placerat est. Ut faucibus quis lectus
-        et consectetur. Integer aliquam purus arcu, et tincidunt lectus semper
-        at. Nullam ex neque, consequat at arcu et, aliquet dapibus tellus. Donec
-        non sapien convallis, semper lorem sit amet, posuere urna.
+        O gráfico mostra o número de mortes diários por conta de causas respiratórias, entre as quais estão o Covid-19.<br />
+        A idéia é comparar o número de mortes em um ano, com o mesmo período do ano anterior. Um aumento atípico indica que algo está acontecendo. Foi isso que levou os países a se alarmarem e tomarem medidas drásticas de fehamento de fronteiras, restrições de circulação de pessoas e outras medidas inéditas no mundo ocidental.<br />
+        Em geral, os meses mais frios do meio do ano, há um aumento das mortes por problemas respiratórios. Isso é mais sentido nos estados com invernos mais rigorosos, como os estados do Sul e Sudeste.<br />
+        Estamos mostrando a média móvel de 7 dias. Essa é uma técnica muito utilizada para minimizazr os efeitos de finais de semana. Todos os pontos do gráfico possuem influência dos últimos 7 dias. Não dá pra comparar sábado, 30 de maio de 2020 com 30 de maio de 2019 que foi uma quinta.<br />
+        Passe por estados como Amazonas, Pará, Pernambuco, Ceará, Rio de Janeiro e São Paulo e observe os dados de 2020 e 2019. Te parece natural o que está acontecendo?<br />
+      </p>
+      <p id="explanation_title">
+        De onde vem os dados?
+      </p>
+      <p id="explanation">
+        Os dados são extraídos dos registros de óbito nos cartórios de todo o país. Esses dados são enviados para um sistema do Ministério da Saúde e publicados online. Os dados possuem algum atraso. Um óbito em uma grande cidade é muito rápido de chegar ao sistema. Porém um óbito que aconteceu em uma residência de um vilarejo que sequer tem um cartório no interior da Amazônia ou no sertão do nordeste, pode demorar algumas semanas para ser incluído no sistema.<br />
+        De acordo com a fonte dos dados, em cado de óbito "A família tem até 24h após o falecimento para registrar o óbito em Cartório que, por sua vez, tem até cinco dias para efetuar o registro de óbito, e depois até oito dias para enviar o ato feito à Central Nacional de Informações do Registro Civil (CRC Nacional), que atualiza esta plataforma".
+        Infelizmente, não temos muitos dados do passado, sequer temos dados confiáveis de 2018 inteiro. Temos apenas dados de 2019 pra frente, porém esperamos que esses dados continuem a ser publicados nos próximos anos para termos uma base melhor.<br />
+        É bem possível que haja subnotificação de mortes, mesmo pegando causas respiratórias mais amplas e não apenas Covid-19. Mesmo assim, os dados são baseados em diagnósticos feito por humanos, que podem sofrer pressões políticas e econômicas para serem distorcidos.<br />
+        Algumas mortes podem ser subnotificadas para que a situação da cidade ou estado pareça melhor, ou mesmo, uma morte por uma outra causa pode ser atribuída ao Coronavírus para um diretor de hospital pleitear mais verbas.<br />
+        O ideal seria termos dados do total de mortes no país e não somente as atribuídas a causas respiratórias. Infelizmente não existem dados confiáveis e atualizados nesse sentido ainda.<br />
+        Mais informações diretamente da <a href="https://transparencia.registrocivil.org.br/especial-covid" target="_blank">fonte de dados</a>.
+      </p>
+      <p id="explanation_title">
+        Estão morrendo mais pessoas?
+      </p>
+      <p id="explanation">
+        O número de mortes não é uma grandeza que possuí não possuí muita variância de um dia para o outro. Não temos dias que morrem o dobro de pessoas que o dia anterior e outro que não morre ninguém. As variações são pequenas de modo que é possível observar as tendências, olhando apenas os dias ao redor.<br />
+        Como não temos dados muito do passado, não temos como comparar diversos anos e nem pretendemos fazer um trabalho científico super rigoroso. A idéia é facilitar esses números pra quem quiser fazer.<br />
+        A pandemia do Covid-19 fez com que muita gente de vários países reunissem dados e estudos. Podemos olhar pra dados de outros países e ver como que estamos nos comportando. Sites como o <a href="https://euromomo.eu" target="_blank">euromomo</a> monitoram o nível de mortes na Europa.<br />
+
       </p>
     </div>
   </body>

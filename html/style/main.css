@@ -3,12 +3,11 @@
 }
 
 .c3-axis-x-label, .c3-axis-y-label {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 body {
   font-family: Sans-serif;
-  font-size: 12px
 }
 
 #main {
@@ -28,9 +27,15 @@ h1 {
 #explanation {
   margin-top: 20px;
   text-align: left;
-  text-indent: 50px;
+  font-size: 16px
+}
+#explanation_title {
+  margin-top: 20px;
+  text-align: left;
+  font-size: 20px;
 }
 
 #footer {
   text-align: right;
+  font-size: 10px;
 }
