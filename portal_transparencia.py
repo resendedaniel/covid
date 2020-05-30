@@ -83,6 +83,8 @@ def process_data(data, state, cutoff=14):
     df['d'] = pd.to_datetime(df['d'], dayfirst=True)
 
     all = df.groupby('d')['value'].sum().reset_index()
+    all = all.sort_values('d')
+    all['value'] = all['value'].rolling(7, min_periods=1).mean()
 
     all['year'] = [x.year for x in all['d']]
     all['ord_d'] = all.groupby('year').cumcount()
@@ -90,7 +92,7 @@ def process_data(data, state, cutoff=14):
     all['state'] = state
 
     if state in ['rj', 'mt', 'all']:
-        all = all[all['d'] >= dt.datetime(2018,8,1)]
+        all = all[all['d'] >= dt.datetime(2018,9,1)]
     if state == 'pr':
         all = all[all['d'] >= dt.datetime(2018,4,1)]
 

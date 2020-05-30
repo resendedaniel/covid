@@ -73,7 +73,7 @@ def plot_single_state(covid_data, state, ax):
         'covid': '#9467BD'
     }
 
-    covid_data['value'] = covid_data['value'].rolling(7).mean()
+    # covid_data['value'] = covid_data['value'].rolling(7).mean()
     for year in covid_data['year'].unique()[::-1]:
         sub = covid_data[covid_data['year'] == year]
         ax.plot(sub['d'].apply(lambda x: x.replace(year=2020)), sub['value'], label='Mortes por dia em {}'.format(year), c=colors[year])
@@ -165,7 +165,7 @@ def plot_region(region, show=True):
     plt.figtext(.95,0.1, footnote, fontsize=10, va="top", ha="right")
 
     # plt.tight_layout()
-    plt.savefig('img/{}.png'.format(region), dpi=100)
+    # plt.savefig('img/{}.png'.format(region), dpi=100)
     # plt.show()
 
 
