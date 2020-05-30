@@ -1,3 +1,3 @@
-import portal_transparencia as transp
+import transparencia
 
-transp.download_all_data(cutoff=14)
+transparencia.download_all_data(cutoff=14)

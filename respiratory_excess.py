@@ -5,7 +5,7 @@ import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import portal_transparencia as transp
+import transparencia
 import oficial
 
 
@@ -32,7 +32,7 @@ for x in STATES.values():
     x.sort()
 
 def create_dirs():
-    for d in ['data', 'processed_data', 'img']:
+    for d in ['data', 'html/data', 'img']:
         try:
             os.makedirs(d)
         except OSError as e:
@@ -139,7 +139,7 @@ def plot_region(region, show=True):
 
     for ax, i in zip(fig.get_axes()[:n], np.arange(n)):
         state = STATES[region][i]
-        covid_data = transp.get_data(state)
+        covid_data = transparencia.get_data(state)
 
         ax = plot_single_state(covid_data, state, ax)
         # axs[int(i/ncols), i%ncols] = plot_single_state(covid_data, state, axs[int(i/ncols), i%ncols])
