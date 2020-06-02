@@ -6,6 +6,10 @@
   font-size: 12px;
 }
 
+.c3-axis > .domain, .c3-axis > .tick > line {
+  stroke: #b3b3b3;
+}
+
 body {
   font-family: Sans-serif;
 }
