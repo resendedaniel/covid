@@ -32,7 +32,7 @@ for x in STATES.values():
     x.sort()
 
 def create_dirs():
-    for d in ['data', 'html/data', 'img']:
+    for d in ['transparencia_cache', 'html/data', 'img']:
         try:
             os.makedirs(d)
         except OSError as e:
@@ -166,7 +166,7 @@ def plot_region(region, show=True):
 
     # plt.tight_layout()
     # plt.savefig('img/{}.png'.format(region), dpi=100)
-    # plt.show()
+    plt.show()
 
 
 create_dirs()
