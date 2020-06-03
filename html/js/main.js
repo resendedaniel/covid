@@ -126,10 +126,15 @@ window.addEventListener('load', function () {
       ],
     })
 
-    chart.xgrids([
-      { value: currentDayOfYear(), text: 'Hoje' },
-      { value: latestDataPoint.ord_d, text: 'Última atualização' },
-    ])
+    chart.xgrids([{
+      value: currentDayOfYear(),
+      text: 'Hoje',
+      class: 'c3-grid-highlight'
+    }, {
+      value: latestDataPoint.ord_d,
+      text: 'Última atualização',
+      class: 'c3-grid-highlight'
+    }])
   })
 
   selector.dispatchEvent(new Event('change'));
