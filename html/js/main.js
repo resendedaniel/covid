@@ -52,6 +52,12 @@ window.addEventListener('load', function () {
           position: 'outer-middle',
         },
       },
+      y2: {
+        show: true,
+        tick: {
+          values: [],
+        }
+      },
     },
     point: {
       show: false,
@@ -61,6 +67,7 @@ window.addEventListener('load', function () {
       inset: {
         anchor: 'top-right',
         step: 1,
+        x: 20,
       },
     },
     tooltip: {
