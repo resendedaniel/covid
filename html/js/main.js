@@ -36,6 +36,15 @@ const formatDate = dateStr => {
   return `${day}/${month}/${year}`;
 }
 
+const currentDayOfYear = () => {
+  /* Copied from https://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366 */
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor(diff / oneDay);
+}
+
 window.addEventListener('load', function () {
   const chart = c3.generate({
     bindto: '#chart',
@@ -116,6 +125,11 @@ window.addEventListener('load', function () {
         ['2020_order', ...order(years['2020'])],
       ],
     })
+
+    chart.xgrids([
+      { value: currentDayOfYear(), text: 'Hoje' },
+      { value: latestDataPoint.ord_d, text: 'Última atualização' },
+    ])
   })
 
   selector.dispatchEvent(new Event('change'));
