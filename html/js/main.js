@@ -18,6 +18,23 @@ const extract_years = data => ({
 });
 const values = data => data.map(d => d.value);
 const order = data => data.map(d => d.ord_d);
+const latest = data =>
+  data.reduce((agg, dataPoint) => {
+    const a = new Date(agg)
+    const b = new Date(dataPoint.d)
+
+    if( a > b) {
+      return agg
+    }
+
+    return dataPoint
+  }, '1900-01-01')
+
+const formatDate = dateStr => {
+  /* Expects dateStr in yyyy-mm-dd format */
+  const [ year, month, day ] = dateStr.split('-');
+  return `${day}/${month}/${year}`;
+}
 
 window.addEventListener('load', function () {
   const chart = c3.generate({
@@ -83,6 +100,11 @@ window.addEventListener('load', function () {
     const state = e.target.value;
 
     const data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
+
+    const latestDataPoint = latest(data);
+    const lastUpdatedField = document.getElementById('last-update');
+    lastUpdatedField.textContent = formatDate(latestDataPoint.d);
+
     const years = extract_years(data)
     chart.load({
       columns: [
