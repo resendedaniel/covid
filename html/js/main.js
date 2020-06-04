@@ -107,7 +107,7 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    const data = await fetch(`../html/data/transparencia_${state}.json`).then(r => r.json());
+    const data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
     const years = extract_years(data)
     chart.load({
       columns: [
