@@ -6,7 +6,7 @@ const xTickFormat = i => {
     'out', 'nov', 'dez'
   ]
 
-  const month = Math.floor(i / 30)
+  const month = Math.floor((i+1) / 30)
   return months[month];
 }
 
@@ -39,28 +39,52 @@ window.addEventListener('load', function () {
       x: {
         tick: {
           format: xTickFormat,
-          values: [15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345],
+          values: [
+            1-1,
+            31-1,
+            31+29-1,
+            31+29+31-1,
+            31+29+31+30-1,
+            31+29+31+30+31-1,
+            31+29+31+30+31+30-1,
+            31+29+31+30+31+30+31-1,
+            31+29+31+30+31+30+31+31-1,
+            31+29+31+30+31+30+31+31+30-1,
+            31+29+31+30+31+30+31+31+30+31-1,
+            31+29+31+30+31+30+31+31+30+31+30-1,
+          ], //[15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345],
         },
-        label: {
-          text: 'Dia do ano',
-          position: 'outer-center',
-        },
+        // label: {
+        //   text: 'Ano',
+        //   position: 'outer-center',
+        // },
       },
       y: {
         label: {
           text: 'Mortes por dia',
           position: 'outer-middle',
-        },
-      },
-      y2: {
-        show: true,
-        tick: {
-          values: [],
         }
       },
     },
+    grid: {
+      x: {
+        show: false ,
+        lines: [
+          {value:0},
+          //{value:31+29+31-1},
+          {value:31+29+31+30+31+31-1},
+          //{value:31+29+31+30+31+30+31+31+30-1},
+          {value:31+29+31+30+31+30+31+31+30+31+30+31-1}
+        ]
+      },
+      y: {
+        show: true,
+      }
+    },
     point: {
-      show: false,
+      show: true,
+      r: 0,
+      focus : { expand: { r:4}}
     },
     legend: {
       position: 'inset',
@@ -73,6 +97,7 @@ window.addEventListener('load', function () {
     tooltip: {
       format: {
         title: i => `Dia ${i+1}`,
+        value: d => Math.round(d),
       },
     },
   })
@@ -82,7 +107,7 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    const data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
+    const data = await fetch(`../html/data/transparencia_${state}.json`).then(r => r.json());
     const years = extract_years(data)
     chart.load({
       columns: [
