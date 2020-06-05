@@ -46,6 +46,9 @@ const currentDayOfYear = () => {
 }
 
 window.addEventListener('load', function () {
+  /* Global required for the chart's tooltip.format.title attribute */
+  let _data = null;
+
   const chart = c3.generate({
     bindto: '#chart',
     data: {
@@ -122,7 +125,20 @@ window.addEventListener('load', function () {
     },
     tooltip: {
       format: {
-        title: i => `Dia ${i+1}`,
+        title: i => {
+          /*
+           * C3 does not provide a way to access attributes of a data point and
+           * neither a way to update the tooltip title format function.
+           *
+           * The quick solution was to put the data in a global variable so it
+           * can be updated when the state selctor changes and accessed here.
+           *
+           * This is the last sign I needed to change the visualization library.
+           */
+          const values = _data.filter(d => d.ord_d === i);
+          const date = latest(values);
+          return formatDate(date.d);
+        },
         value: d => Math.round(d),
       },
     },
@@ -133,13 +149,13 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    const data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
+    _data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
 
-    const latestDataPoint = latest(data);
+    const latestDataPoint = latest(_data);
     const lastUpdatedField = document.getElementById('last-update');
     lastUpdatedField.textContent = formatDate(latestDataPoint.d);
 
-    const years = extract_years(data)
+    const years = extract_years(_data)
     chart.load({
       columns: [
         ['2018', ...values(years['2018'])],
