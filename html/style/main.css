@@ -10,6 +10,10 @@
   stroke: #fff;
 }
 
+.c3-grid-highlight {
+  stroke-dasharray: 5 5;
+}
+
 body {
   font-family: Sans-serif;
 }

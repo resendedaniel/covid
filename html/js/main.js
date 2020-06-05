@@ -18,8 +18,37 @@ const extract_years = data => ({
 });
 const values = data => data.map(d => d.value);
 const order = data => data.map(d => d.ord_d);
+const latest = data =>
+  data.reduce((agg, dataPoint) => {
+    const a = new Date(agg)
+    const b = new Date(dataPoint.d)
+
+    if( a > b) {
+      return agg
+    }
+
+    return dataPoint
+  }, '1900-01-01')
+
+const formatDate = dateStr => {
+  /* Expects dateStr in yyyy-mm-dd format */
+  const [ year, month, day ] = dateStr.split('-');
+  return `${day}/${month}/${year}`;
+}
+
+const currentDayOfYear = () => {
+  /* Copied from https://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366 */
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor(diff / oneDay);
+}
 
 window.addEventListener('load', function () {
+  /* Global required for the chart's tooltip.format.title attribute */
+  let _data = null;
+
   const chart = c3.generate({
     bindto: '#chart',
     data: {
@@ -96,7 +125,20 @@ window.addEventListener('load', function () {
     },
     tooltip: {
       format: {
-        title: i => `Dia ${i+1}`,
+        title: i => {
+          /*
+           * C3 does not provide a way to access attributes of a data point and
+           * neither a way to update the tooltip title format function.
+           *
+           * The quick solution was to put the data in a global variable so it
+           * can be updated when the state selctor changes and accessed here.
+           *
+           * This is the last sign I needed to change the visualization library.
+           */
+          const values = _data.filter(d => d.ord_d === i);
+          const date = latest(values);
+          return formatDate(date.d);
+        },
         value: d => Math.round(d),
       },
     },
@@ -107,8 +149,13 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    const data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
-    const years = extract_years(data)
+    _data = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
+
+    const latestDataPoint = latest(_data);
+    const lastUpdatedField = document.getElementById('last-update');
+    lastUpdatedField.textContent = formatDate(latestDataPoint.d);
+
+    const years = extract_years(_data)
     chart.load({
       columns: [
         ['2018', ...values(years['2018'])],
@@ -119,6 +166,16 @@ window.addEventListener('load', function () {
         ['2020_order', ...order(years['2020'])],
       ],
     })
+
+    chart.xgrids([{
+      value: currentDayOfYear(),
+      text: 'Hoje',
+      class: 'c3-grid-highlight'
+    }, {
+      value: latestDataPoint.ord_d,
+      text: 'Última atualização',
+      class: 'c3-grid-highlight'
+    }])
   })
 
   selector.dispatchEvent(new Event('change'));
