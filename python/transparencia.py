@@ -4,7 +4,7 @@ import os
 import datetime as dt
 import pandas as pd
 
-raw_filename = '../transparencia_cache/transparencia_{}.json'
+raw_filename = 'transparencia_cache/transparencia_{}.json'
 processed_filename = '../html/data/transparencia_{}.json'
 
 def check_cache(state):

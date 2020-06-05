@@ -32,7 +32,7 @@ for x in STATES.values():
     x.sort()
 
 def create_dirs():
-    for d in ['../transparencia_cache', '../html/data', '../img']:
+    for d in ['transparencia_cache', '../html/data', 'img']:
         try:
             os.makedirs(d)
         except OSError as e:
