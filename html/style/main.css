@@ -7,7 +7,7 @@
 }
 
 .c3-axis > .domain, .c3-axis > .tick > line {
-  stroke: #b3b3b3;
+  stroke: #fff;
 }
 
 .c3-grid-highlight {
@@ -27,7 +27,7 @@ body {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: normal;
 }
 
@@ -41,7 +41,7 @@ h1 {
 }
 
 h2 {
-  font-weight: normal;
+  font-weight: bold;
   font-size: 20px;
 }
 
