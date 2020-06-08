@@ -148,8 +148,8 @@ window.addEventListener('load', function () {
       text: 'Hoje',
       class: 'c3-grid-highlight'
     }, {
-      value: latestDataPoint.ord_d,
-      text: 'Última atualização',
+      value: latest(_data).ord_d,
+      text: 'Último dia com dados disponíveis',
       class: 'c3-grid-highlight'
     }])
   })
