@@ -1,13 +1,6 @@
 const xTickFormat = i => {
-  const months = [
-    'jan', 'fev', 'mar',
-    'abr', 'mai', 'jun',
-    'jul', 'ago', 'set',
-    'out', 'nov', 'dez'
-  ]
-
-  const month = Math.floor((i+1) / 30)
-  return months[month];
+  const dt = luxon.DateTime.fromObject({ ordinal: i+1 }).setLocale('pt-br');
+  return dt.toLocaleString({ month: 'short' }).replace('.', '');
 }
 
 const extract = (year, data) => data.filter(d => d.year === year);
@@ -31,18 +24,15 @@ const latest = data =>
   }, '1900-01-01')
 
 const formatDate = dateStr => {
-  /* Expects dateStr in yyyy-mm-dd format */
-  const [ year, month, day ] = dateStr.split('-');
-  return `${day}/${month}/${year}`;
+  const dt = luxon.DateTime.fromISO(dateStr).setLocale('pt-br');
+  return dt.toLocaleString();
 }
 
-const currentDayOfYear = () => {
-  /* Copied from https://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366 */
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-  const oneDay = 1000 * 60 * 60 * 24;
-  return Math.floor(diff / oneDay);
+const currentDayOfYear = () => luxon.DateTime.local().ordinal;
+
+const ordinal = dateStr => {
+  const dt = luxon.DateTime.fromISO(dateStr).setLocale('pt-br');
+  return dt.ordinal
 }
 
 window.addEventListener('load', function () {
@@ -69,18 +59,18 @@ window.addEventListener('load', function () {
         tick: {
           format: xTickFormat,
           values: [
-            1-1,
-            31-1,
-            31+29-1,
-            31+29+31-1,
-            31+29+31+30-1,
-            31+29+31+30+31-1,
-            31+29+31+30+31+30-1,
-            31+29+31+30+31+30+31-1,
-            31+29+31+30+31+30+31+31-1,
-            31+29+31+30+31+30+31+31+30-1,
-            31+29+31+30+31+30+31+31+30+31-1,
-            31+29+31+30+31+30+31+31+30+31+30-1,
+            ordinal('2020-01-01') - 1,
+            ordinal('2020-02-01') - 1,
+            ordinal('2020-03-01') - 1,
+            ordinal('2020-04-01') - 1,
+            ordinal('2020-05-01') - 1,
+            ordinal('2020-06-01') - 1,
+            ordinal('2020-07-01') - 1,
+            ordinal('2020-08-01') - 1,
+            ordinal('2020-09-01') - 1,
+            ordinal('2020-10-01') - 1,
+            ordinal('2020-11-01') - 1,
+            ordinal('2020-12-01') - 1,
           ], //[15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345],
         },
         // label: {
