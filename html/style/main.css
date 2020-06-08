@@ -19,11 +19,15 @@ body {
 }
 
 #main {
-  max-width: 800px;
+  max-width: 1080px;
   min-width: 310;
   margin: 0 auto;
   margin-top: 50px;
   text-align: center;
+}
+
+#chart {
+  min-height: 482px;
 }
 
 h1 {
@@ -32,7 +36,10 @@ h1 {
 }
 
 #text {
+  max-width: 800px;
   text-align: left;
+  display: table;
+  margin: 0 auto;
 }
 
 #text > p {

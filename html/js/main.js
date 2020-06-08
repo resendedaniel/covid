@@ -129,7 +129,7 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    const response = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
+    const response = await fetch(`/html/data/transparencia_${state}.json`).then(r => r.json());
     _data = response.data;
 
     const lastUpdatedField = document.getElementById('last-update');
