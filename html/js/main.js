@@ -128,9 +128,8 @@ window.addEventListener('load', function () {
     const response = await fetch(`/covid/html/data/transparencia_${state}.json`).then(r => r.json());
     _data = response.data;
 
-    const latestDataPoint = latest(_data);
     const lastUpdatedField = document.getElementById('last-update');
-    lastUpdatedField.textContent = formatDate(latestDataPoint.d);
+    lastUpdatedField.textContent = formatDate(response.updated_date);
 
     const years = extract_years(_data)
     chart.load({
