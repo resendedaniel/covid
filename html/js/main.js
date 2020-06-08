@@ -1,5 +1,5 @@
 const xTickFormat = i => {
-  const dt = luxon.DateTime.fromObject({ ordinal: i+1 }).setLocale('pt-br');
+  const dt = luxon.DateTime.fromObject({ ordinal: i }).setLocale('pt-br');
   return dt.toLocaleString({ month: 'short' }).replace('.', '');
 }
 
@@ -10,7 +10,7 @@ const extract_years = data => ({
   '2020': extract(2020, data),
 });
 const values = data => data.map(d => d.value);
-const order = data => data.map(d => d.ord_d);
+const order = data => data.map(d => d.d).map(ordinal);
 const latest = data =>
   data.reduce((agg, dataPoint) => {
     const a = new Date(agg)
@@ -59,18 +59,18 @@ window.addEventListener('load', function () {
         tick: {
           format: xTickFormat,
           values: [
-            ordinal('2020-01-01') - 1,
-            ordinal('2020-02-01') - 1,
-            ordinal('2020-03-01') - 1,
-            ordinal('2020-04-01') - 1,
-            ordinal('2020-05-01') - 1,
-            ordinal('2020-06-01') - 1,
-            ordinal('2020-07-01') - 1,
-            ordinal('2020-08-01') - 1,
-            ordinal('2020-09-01') - 1,
-            ordinal('2020-10-01') - 1,
-            ordinal('2020-11-01') - 1,
-            ordinal('2020-12-01') - 1,
+            ordinal('2020-01-01'),
+            ordinal('2020-02-01'),
+            ordinal('2020-03-01'),
+            ordinal('2020-04-01'),
+            ordinal('2020-05-01'),
+            ordinal('2020-06-01'),
+            ordinal('2020-07-01'),
+            ordinal('2020-08-01'),
+            ordinal('2020-09-01'),
+            ordinal('2020-10-01'),
+            ordinal('2020-11-01'),
+            ordinal('2020-12-01'),
           ],
         },
       },
@@ -111,7 +111,7 @@ window.addEventListener('load', function () {
            *
            * This is the last sign I needed to change the visualization library.
            */
-          const values = _data.filter(d => d.ord_d === i);
+          const values = _data.filter(d => ordinal(d.d) === i);
           const date = latest(values);
           return formatDate(date.d);
         },
@@ -148,7 +148,7 @@ window.addEventListener('load', function () {
       text: 'Hoje',
       class: 'c3-grid-highlight'
     }, {
-      value: latest(_data).ord_d,
+      value: ordinal(latest(_data).d),
       text: 'Último dia com dados disponíveis',
       class: 'c3-grid-highlight'
     }])
