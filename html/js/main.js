@@ -3,7 +3,11 @@ const xTickFormat = i => {
   return dt.toLocaleString({ month: 'short' }).replace('.', '');
 }
 
-const extract = (year, data) => data.filter(d => d.year === year);
+const extract = (year, data) => data.filter(d => {
+  const dt = luxon.DateTime.fromISO(d.d).setLocale('pt-br');
+  return dt.year === year
+});
+
 const extract_years = data => ({
   '2018': extract(2018, data),
   '2019': extract(2019, data),
