@@ -71,12 +71,8 @@ window.addEventListener('load', function () {
             ordinal('2020-10-01') - 1,
             ordinal('2020-11-01') - 1,
             ordinal('2020-12-01') - 1,
-          ], //[15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345],
+          ],
         },
-        // label: {
-        //   text: 'Ano',
-        //   position: 'outer-center',
-        // },
       },
       y: {
         label: {
@@ -86,16 +82,6 @@ window.addEventListener('load', function () {
       },
     },
     grid: {
-      x: {
-        show: false ,
-        lines: [
-          {value:0},
-          //{value:31+29+31-1},
-          {value:31+29+31+30+31+31-1},
-          //{value:31+29+31+30+31+30+31+31+30-1},
-          {value:31+29+31+30+31+30+31+31+30+31+30+31-1}
-        ]
-      },
       y: {
         show: true,
       }
