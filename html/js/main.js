@@ -1,23 +1,20 @@
 const xTickFormat = i => {
-  const months = [
-    'jan', 'fev', 'mar',
-    'abr', 'mai', 'jun',
-    'jul', 'ago', 'set',
-    'out', 'nov', 'dez'
-  ]
-
-  const month = Math.floor((i+1) / 30)
-  return months[month];
+  const dt = luxon.DateTime.fromObject({ ordinal: i }).setLocale('pt-br');
+  return dt.toLocaleString({ month: 'short' }).replace('.', '');
 }
 
-const extract = (year, data) => data.filter(d => d.year === year);
+const extract = (year, data) => data.filter(d => {
+  const dt = luxon.DateTime.fromISO(d.d).setLocale('pt-br');
+  return dt.year === year
+});
+
 const extract_years = data => ({
   '2018': extract(2018, data),
   '2019': extract(2019, data),
   '2020': extract(2020, data),
 });
 const values = data => data.map(d => d.value);
-const order = data => data.map(d => d.ord_d);
+const order = data => data.map(d => d.d).map(ordinal);
 const latest = data =>
   data.reduce((agg, dataPoint) => {
     const a = new Date(agg)
@@ -31,18 +28,15 @@ const latest = data =>
   }, '1900-01-01')
 
 const formatDate = dateStr => {
-  /* Expects dateStr in yyyy-mm-dd format */
-  const [ year, month, day ] = dateStr.split('-');
-  return `${day}/${month}/${year}`;
+  const dt = luxon.DateTime.fromISO(dateStr).setLocale('pt-br');
+  return dt.toLocaleString();
 }
 
-const currentDayOfYear = () => {
-  /* Copied from https://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366 */
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-  const oneDay = 1000 * 60 * 60 * 24;
-  return Math.floor(diff / oneDay);
+const currentDayOfYear = () => luxon.DateTime.local().ordinal;
+
+const ordinal = dateStr => {
+  const dt = luxon.DateTime.fromISO(dateStr).setLocale('pt-br');
+  return dt.ordinal
 }
 
 window.addEventListener('load', function () {
@@ -69,24 +63,20 @@ window.addEventListener('load', function () {
         tick: {
           format: xTickFormat,
           values: [
-            1-1,
-            31-1,
-            31+29-1,
-            31+29+31-1,
-            31+29+31+30-1,
-            31+29+31+30+31-1,
-            31+29+31+30+31+30-1,
-            31+29+31+30+31+30+31-1,
-            31+29+31+30+31+30+31+31-1,
-            31+29+31+30+31+30+31+31+30-1,
-            31+29+31+30+31+30+31+31+30+31-1,
-            31+29+31+30+31+30+31+31+30+31+30-1,
-          ], //[15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345],
+            ordinal('2020-01-01'),
+            ordinal('2020-02-01'),
+            ordinal('2020-03-01'),
+            ordinal('2020-04-01'),
+            ordinal('2020-05-01'),
+            ordinal('2020-06-01'),
+            ordinal('2020-07-01'),
+            ordinal('2020-08-01'),
+            ordinal('2020-09-01'),
+            ordinal('2020-10-01'),
+            ordinal('2020-11-01'),
+            ordinal('2020-12-01'),
+          ],
         },
-        // label: {
-        //   text: 'Ano',
-        //   position: 'outer-center',
-        // },
       },
       y: {
         label: {
@@ -96,16 +86,6 @@ window.addEventListener('load', function () {
       },
     },
     grid: {
-      x: {
-        show: false ,
-        lines: [
-          {value:0},
-          //{value:31+29+31-1},
-          {value:31+29+31+30+31+31-1},
-          //{value:31+29+31+30+31+30+31+31+30-1},
-          {value:31+29+31+30+31+30+31+31+30+31+30+31-1}
-        ]
-      },
       y: {
         show: true,
       }
@@ -135,7 +115,7 @@ window.addEventListener('load', function () {
            *
            * This is the last sign I needed to change the visualization library.
            */
-          const values = _data.filter(d => d.ord_d === i);
+          const values = _data.filter(d => ordinal(d.d) === i);
           const date = latest(values);
           return formatDate(date.d);
         },
@@ -149,11 +129,11 @@ window.addEventListener('load', function () {
   selector.addEventListener('change', async e => {
     const state = e.target.value;
 
-    _data = await fetch(`/html/data/transparencia_${state}.json`).then(r => r.json());
+    const response = await fetch(`/html/data/transparencia_${state}.json`).then(r => r.json());
+    _data = response.data;
 
-    const latestDataPoint = latest(_data);
     const lastUpdatedField = document.getElementById('last-update');
-    lastUpdatedField.textContent = formatDate(latestDataPoint.d);
+    lastUpdatedField.textContent = formatDate(response.updated_date);
 
     const years = extract_years(_data)
     chart.load({
@@ -172,8 +152,8 @@ window.addEventListener('load', function () {
       text: 'Hoje',
       class: 'c3-grid-highlight'
     }, {
-      value: latestDataPoint.ord_d,
-      text: 'Última atualização',
+      value: ordinal(latest(_data).d),
+      text: 'Último dia com dados disponíveis',
       class: 'c3-grid-highlight'
     }])
   })
