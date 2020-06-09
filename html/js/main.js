@@ -153,7 +153,7 @@ window.addEventListener('load', function () {
       class: 'c3-grid-highlight'
     }, {
       value: ordinal(latest(_data).d),
-      text: 'Último dia com dados disponíveis',
+      text: 'Corte de 14 dias',
       class: 'c3-grid-highlight'
     }])
   })
