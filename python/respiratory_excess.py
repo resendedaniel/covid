@@ -17,7 +17,7 @@ STATES = {
     'n': ['ac', 'am', 'pa', 'rr', 'ro', 'ap', 'to'],
     'ne': ['ba', 'se', 'al', 'pe', 'pb', 'rn', 'ce', 'ma', 'pi'],
     'brasil': ['all'],
-    'worst': ['am', 'pa', 'ce', 'pe', 'sp', 'rj', 'ma']
+    'worst': ['am', 'pa', 'rr', 'ce', 'pe', 'al', 'sp', 'rj', 'ma']
 }
 REGION_NAME = {
     's': 'Região Sul',

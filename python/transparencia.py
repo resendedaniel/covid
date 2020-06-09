@@ -22,8 +22,17 @@ def save_cache(data, state):
 
 def save_processed(data, state):
     data = data.copy()
+
+    output = {
+        'last_date': data['d'].max().isoformat(),
+        'updated_date': dt.datetime.today().isoformat()
+    }
+
     data['d'] = data['d'].dt.strftime('%Y-%m-%d')
-    data = data.to_json(processed_filename.format(state), orient='records')
+    output['data'] = [ v.dropna().to_dict() for k,v in data.iterrows() ]
+
+    with open(processed_filename.format(state), 'w') as fp:
+        json.dump(output, fp)
 
 def get_data(state='all'):
     if not check_cache(state):
@@ -82,23 +91,33 @@ def process_data(data, state, cutoff=14):
     df = pd.DataFrame(values)
     df['d'] = pd.to_datetime(df['d'], dayfirst=True)
 
-    all = df.groupby('d')['value'].sum().reset_index()
-    all = all.sort_values('d')
-    all['value'] = all['value'].rolling(7, min_periods=1).mean()
-
-    all['year'] = [x.year for x in all['d']]
-    all['ord_d'] = all.groupby('year').cumcount()
-    all['cumvalue'] = all.groupby('year')[['value']].cumsum()
-    all['state'] = state
-
     if state in ['rj', 'mt', 'all']:
-        all = all[all['d'] >= dt.datetime(2018,9,1)]
+        df = df[df['d'] >= dt.datetime(2018,9,1)]
     if state == 'pr':
-        all = all[all['d'] >= dt.datetime(2018,4,1)]
+        df = df[df['d'] >= dt.datetime(2018,4,1)]
 
-    all = all[:-cutoff]
+    df = df.groupby('d')['value'].sum().reset_index()
+    df = df.sort_values('d')
+    df['value'] = df['value'].rolling(7, min_periods=1).mean()
 
-    return all
+    df['year'] = [x.year for x in df['d']]
+    df['ord_d'] = df.groupby('year').cumcount()
+
+
+    df_2020 = df[df['year'] == 2020][['ord_d', 'year', 'value']].rename(columns={'value':'value_2020'}).copy()
+    df_2019 = df[df['year'] == 2019][['ord_d', 'value']].rename(columns={'value':'value_2019'}).copy()
+    df_excess = pd.merge(df_2020, df_2019, on='ord_d', how='left')
+    df_excess['excess'] = df_excess['value_2020'] - df_excess['value_2019']
+    df_excess['cum_excess'] = df_excess['excess'].cumsum()
+    df_excess = df_excess[['ord_d', 'year', 'excess', 'cum_excess']]
+
+    df = pd.merge(df, df_excess, on=['ord_d', 'year'], how='left')
+
+    df = df[:-cutoff]
+
+    df['state'] = state
+
+    return df
 
 def download_all_data(cutoff=14):
     states = [
