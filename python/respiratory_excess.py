@@ -166,7 +166,7 @@ def plot_region(region, show=True):
 
     # plt.tight_layout()
     # plt.savefig('img/{}.png'.format(region), dpi=100)
-    plt.show()
+    # plt.show()
 
 
 create_dirs()
