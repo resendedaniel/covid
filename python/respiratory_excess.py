@@ -165,7 +165,7 @@ def plot_region(region, show=True):
     plt.figtext(.95,0.1, footnote, fontsize=10, va="top", ha="right")
 
     # plt.tight_layout()
-    # plt.savefig('img/{}.png'.format(region), dpi=100)
+    plt.savefig('img/{}.png'.format(region), dpi=100)
     # plt.show()
 
 
@@ -177,3 +177,8 @@ plot_region('se', show=True)
 plot_region('co', show=True)
 plot_region('ne', show=True)
 plot_region('n', show=True)
+
+# state = 'am'
+# data = transparencia.get_data(state)
+# of_data = oficial.process_data(oficial.get_data())
+# data = transparencia.bind_oficial_data(data, of_data, state)

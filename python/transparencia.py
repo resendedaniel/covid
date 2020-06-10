@@ -119,17 +119,19 @@ def process_data(data, state, cutoff=14):
 
     return df
 
-def download_all_data(cutoff=14):
-    states = [
-        'rs', 'sc', 'pr', 'se',
-        'sp', 'mg', 'es', 'rj',
-        'ms', 'mt', 'go', 'df',
-        'ac', 'am', 'pa', 'rr', 'ro', 'ap', 'to',
-        'ba', 'se', 'al', 'pe', 'pb', 'rn', 'ce', 'ma', 'pi',
-        'all'
-    ]
-    for state in states:
-        raw_data = fetch_data(state)
-        data = process_data(raw_data, state, cutoff=cutoff)
-        save_cache(raw_data, state)
-        save_processed(data, state)
+def bind_oficial_data(data, oficial_data, state):
+    oficial_data_subset = oficial_data[oficial_data['state'] == state]
+    data = pd.merge(data, oficial_data_subset, on='d', how='left')
+
+# d,
+# ord_d,
+# year,
+# state,
+# deaths_daily,
+# deaths_daily_mean,
+# deaths_cum,
+# excess_daily_mean,
+# excess_cum,
+# covid_deaths_daily,
+# covid_deaths_daily_mean,
+# covid_deaths_cum,
