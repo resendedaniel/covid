@@ -33,6 +33,21 @@ def save_processed(data, state):
         'updated_date': dt.datetime.today().isoformat()
     }
 
+    covid_subset = data[data['covid_deaths_cum'] > 0]
+    covid_subset = covid_subset.dropna()
+    output['first_covid_death'] = covid_subset['d'].min().isoformat()
+
+    last_row = covid_subset.tail(1).to_dict(orient='records')[0]
+    output['excess_death_since_covid_abs'] = last_row['excess_cum']
+    output['excess_death_since_covid_rel'] = last_row['excess_cum'] / (last_row['deaths_cum'] - last_row['excess_cum'])
+
+    covid_subset['daily_excess_rel'] = covid_subset['excess_mean'] / covid_subset['deaths_daily_mean']
+    max_excess = covid_subset.iloc[covid_subset['daily_excess_rel'].argmax()]
+
+    output['peak_excess_d'] = max_excess['d'].isoformat()
+    output['peak_excess_abs'] = max_excess['excess_cum']
+    output['peak_excess_rel'] = max_excess['excess_cum'] / (max_excess['deaths_cum'] - max_excess['excess_cum'])
+
     data['d'] = data['d'].dt.strftime('%Y-%m-%d')
     output['data'] = [ v.dropna().to_dict() for k,v in data.iterrows() ]
 
@@ -118,12 +133,15 @@ def process_data(data, state, cutoff=14):
     return df
 
 def bind_excess(df):
-    df_2020 = df[df['year'] == 2020][['ord_d', 'year', 'deaths_daily']].rename(columns={'deaths_daily':'deaths_daily_2020'}).copy()
-    df_2019 = df[df['year'] == 2019][['ord_d', 'deaths_daily']].rename(columns={'deaths_daily':'deaths_daily_2019'}).copy()
+    df_2020 = df[df['year'] == 2020][['ord_d', 'year', 'deaths_daily', 'deaths_daily_mean']].copy()
+    df_2020 = df_2020.rename(columns={'deaths_daily':'deaths_daily_2020', 'deaths_daily_mean': 'deaths_daily_mean_2020'})
+    df_2019 = df[df['year'] == 2019][['ord_d', 'deaths_daily', 'deaths_daily_mean']].copy()
+    df_2019 = df_2019.rename(columns={'deaths_daily':'deaths_daily_2019', 'deaths_daily_mean': 'deaths_daily_mean_2019'})
     df_excess = pd.merge(df_2020, df_2019, on='ord_d', how='left')
     df_excess['excess'] = df_excess['deaths_daily_2020'] - df_excess['deaths_daily_2019']
+    df_excess['excess_mean'] = df_excess['deaths_daily_mean_2020'] - df_excess['deaths_daily_mean_2019']
     df_excess['excess_cum'] = df_excess['excess'].cumsum()
-    df_excess = df_excess[['ord_d', 'year', 'excess', 'excess_cum']]
+    df_excess = df_excess[['ord_d', 'year', 'excess', 'excess_mean', 'excess_cum']]
 
     df = pd.merge(df, df_excess, on=['ord_d', 'year'], how='left')
 
@@ -132,6 +150,8 @@ def bind_excess(df):
 def bind_oficial_data(df, of_data, state):
     of_data_subset = of_data[of_data['state'] == state]
     of_data_subset = of_data_subset.drop('state', axis=1)
-    df = pd.merge(df, of_data_subset, on='d', how='left')
+    df = pd.merge(df, of_data_subset, on='d', how='outer')
+    df['year'] = [x.year for x in df['d']]
+    df['state'] = state
 
     return df

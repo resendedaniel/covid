@@ -25,7 +25,9 @@ for state in STATES:
     data = transparencia.process_data(data, state)
     data = transparencia.bind_excess(data)
     data = transparencia.bind_oficial_data(data, of_data, state)
+    print(data.tail())
 
     transparencia.save_processed(data, state)
 
     # viz.plot_deaths(data, state)
+    viz.plot_covid(data, state)

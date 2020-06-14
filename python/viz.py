@@ -93,3 +93,17 @@ def plot_deaths(covid_data, state):
     ax.set_title(state.upper())
 
     plt.show()
+
+def plot_covid(data, state):
+    df = data[data['year'] == 2020].copy()
+
+    fig, ax = plt.subplots()
+
+    plt.scatter(df['d'], df['covid_deaths_daily'], label='Notificação oficial de mortes por Covid', s=2, alpha=.5)
+    plt.plot(df['d'], df['covid_deaths_daily_mean'], label='Média móvel mortes por Covid')
+    plt.plot(df['d'], df['excess_mean'], label='Excesso de mortes de causas naturais em 2020')
+
+    plt.legend()
+    plt.title(state)
+
+    plt.show()

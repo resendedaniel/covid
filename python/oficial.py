@@ -23,7 +23,7 @@ def process_data(data):
     data = data[data['covid_deaths_cum'] > 0]
     data['d'] = pd.to_datetime(data['d'])
     data = data.sort_values(['state', 'd'])
-    data['covid_deaths_daily'] = data.groupby('state')[['covid_deaths_cum']].diff().fillna(0)
-    data['covid_deaths_daily_mean'] = data['covid_deaths_daily'].rolling(7, min_periods=1).mean()
+    data['covid_deaths_daily'] = data.groupby('state')[['covid_deaths_cum']].diff().fillna(data['covid_deaths_cum'])
 
+    data['covid_deaths_daily_mean'] = data.groupby('state').apply(lambda x: x[['covid_deaths_daily']].rolling(7, min_periods=1).mean())
     return data
