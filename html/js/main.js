@@ -13,7 +13,7 @@ const extract_years = data => ({
   '2019': extract(2019, data),
   '2020': extract(2020, data),
 });
-const values = data => data.map(d => d.value);
+const values = data => data.map(d => d.deaths_daily_mean);
 const order = data => data.map(d => d.d).map(ordinal);
 const latest = data =>
   data.reduce((agg, dataPoint) => {

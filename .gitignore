@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 *.png
-transparencia_cache*
+cache*
 img*

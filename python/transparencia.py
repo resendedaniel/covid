@@ -4,11 +4,16 @@ import os
 import datetime as dt
 import pandas as pd
 
-raw_filename = 'transparencia_cache/transparencia_{}.json'
+raw_filename = 'cache/transparencia_{}.json'
 processed_filename = '../html/data/transparencia_{}.json'
 
 def check_cache(state):
-    return os.path.exists(raw_filename.format(state))
+    filename = raw_filename.format(state)
+    if os.path.exists(filename):
+        return (dt.datetime.today() - dt.datetime.fromtimestamp(os.path.getmtime(filename))).seconds < 12*60*60
+    else:
+        return False
+
 
 def load_cache(state):
     print('fetching {} data from cache'.format(state))
@@ -86,7 +91,7 @@ def process_data(data, state, cutoff=14):
     values = []
     for key, row in data.items():
         for x in row.values():
-            values.append({'d': key, 'type': x[0]['tipo_doenca'], 'value': int(x[0]['total'])})
+            values.append({'d': key, 'type': x[0]['tipo_doenca'], 'deaths_daily': int(x[0]['total'])})
 
     df = pd.DataFrame(values)
     df['d'] = pd.to_datetime(df['d'], dayfirst=True)
@@ -96,42 +101,37 @@ def process_data(data, state, cutoff=14):
     if state == 'pr':
         df = df[df['d'] >= dt.datetime(2018,4,1)]
 
-    df = df.groupby('d')['value'].sum().reset_index()
+    df = df.groupby('d')['deaths_daily'].sum().reset_index()
     df = df.sort_values('d')
-    df['value'] = df['value'].rolling(7, min_periods=1).mean()
-
     df['year'] = [x.year for x in df['d']]
     df['ord_d'] = df.groupby('year').cumcount()
 
-
-    df_2020 = df[df['year'] == 2020][['ord_d', 'year', 'value']].rename(columns={'value':'value_2020'}).copy()
-    df_2019 = df[df['year'] == 2019][['ord_d', 'value']].rename(columns={'value':'value_2019'}).copy()
-    df_excess = pd.merge(df_2020, df_2019, on='ord_d', how='left')
-    df_excess['excess'] = df_excess['value_2020'] - df_excess['value_2019']
-    df_excess['cum_excess'] = df_excess['excess'].cumsum()
-    df_excess = df_excess[['ord_d', 'year', 'excess', 'cum_excess']]
-
-    df = pd.merge(df, df_excess, on=['ord_d', 'year'], how='left')
+    df['deaths_daily_mean'] = df['deaths_daily'].rolling(7, min_periods=1).mean()
+    df['deaths_cum'] = df.groupby('year')[['deaths_daily']].cumsum()
 
     df = df[:-cutoff]
 
     df['state'] = state
 
+    df = df[['state', 'year', 'ord_d', 'd', 'deaths_daily', 'deaths_daily_mean', 'deaths_cum']]
+
     return df
 
-def bind_oficial_data(data, oficial_data, state):
-    oficial_data_subset = oficial_data[oficial_data['state'] == state]
-    data = pd.merge(data, oficial_data_subset, on='d', how='left')
+def bind_excess(df):
+    df_2020 = df[df['year'] == 2020][['ord_d', 'year', 'deaths_daily']].rename(columns={'deaths_daily':'deaths_daily_2020'}).copy()
+    df_2019 = df[df['year'] == 2019][['ord_d', 'deaths_daily']].rename(columns={'deaths_daily':'deaths_daily_2019'}).copy()
+    df_excess = pd.merge(df_2020, df_2019, on='ord_d', how='left')
+    df_excess['excess'] = df_excess['deaths_daily_2020'] - df_excess['deaths_daily_2019']
+    df_excess['excess_cum'] = df_excess['excess'].cumsum()
+    df_excess = df_excess[['ord_d', 'year', 'excess', 'excess_cum']]
 
-# d,
-# ord_d,
-# year,
-# state,
-# deaths_daily,
-# deaths_daily_mean,
-# deaths_cum,
-# excess_daily_mean,
-# excess_cum,
-# covid_deaths_daily,
-# covid_deaths_daily_mean,
-# covid_deaths_cum,
+    df = pd.merge(df, df_excess, on=['ord_d', 'year'], how='left')
+
+    return df
+
+def bind_oficial_data(df, of_data, state):
+    of_data_subset = of_data[of_data['state'] == state]
+    of_data_subset = of_data_subset.drop('state', axis=1)
+    df = pd.merge(df, of_data_subset, on='d', how='left')
+
+    return df
