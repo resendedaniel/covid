@@ -7,12 +7,23 @@ def get_data():
     res = requests.get(url)
     data = res.json()['data']
 
-    data_br = [x for x in data if x['id'] == 'BRASIL']
-    data_br = pd.DataFrame(data_br)
-    data_br['d'] = pd.to_datetime(data_br['date'])
-    data_br = data_br.sort_values('d')
-    data_br = data_br[['d', 'cases', 'deaths']]
-    data_br['new_cases'] = data_br['cases'].diff()
-    data_br['new_deaths'] = data_br['deaths'].diff()
+    return data
 
-    return data_br
+def process_data(data):
+    data = pd.DataFrame(data)
+    data = data.rename(columns={
+        'id': 'state',
+        'date': 'd',
+        'cases': 'covid_cases_cum',
+        'deaths': 'covid_deaths_cum'
+    })
+    data = data[['d', 'state', 'covid_deaths_cum']]
+    data['state'] = data['state'].str.lower()
+    data['state'] = data['state'].replace('brasil', 'all')
+    data = data[data['covid_deaths_cum'] > 0]
+    data['d'] = pd.to_datetime(data['d'])
+    data = data.sort_values(['state', 'd'])
+    data['covid_deaths_daily'] = data.groupby('state')[['covid_deaths_cum']].diff().fillna(data['covid_deaths_cum'])
+
+    data['covid_deaths_daily_mean'] = data.groupby('state').apply(lambda x: x[['covid_deaths_daily']].rolling(7, min_periods=1).mean())
+    return data
