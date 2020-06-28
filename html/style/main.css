@@ -52,7 +52,39 @@ h2 {
   font-size: 20px;
 }
 
-#footer {
+#chart-footer {
   text-align: right;
   font-size: 10px;
+}
+
+.contact-section {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 15px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.contact-section a {
+  display: block;
+}
+
+.contact-section .no-link {
+  display: block;
+}
+
+.contact-column {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 60px;
+}
+
+@media (max-width: 850px) {
+  .contact-column {
+    display: block;
+  }
+
+  .contact-section {
+    margin-bottom: 10px;
+  }
 }
