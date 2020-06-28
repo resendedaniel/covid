@@ -99,7 +99,7 @@ window.addEventListener('load', function () {
       position: 'inset',
       inset: {
         anchor: 'top-right',
-        step: 1,
+        step: 3,
         x: 20,
       },
     },
