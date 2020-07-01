@@ -157,10 +157,16 @@ window.addEventListener('load', function () {
   const router = new Navigo(window.location.protocol + '//' + window.location.host);
   const selector = document.getElementById('state-selector')
 
+  const navigate = path => {
+    ga('set', 'page', path);
+    ga('send', 'pageview');
+    router.navigate(path);
+  }
+
   selector.addEventListener('change', e => {
     const state = e.target.value;
     const path = state === 'all' ? '/' : `/${state}`;
-    router.navigate(path);
+    navigate(path)
   })
 
   router.on('/', () => {
@@ -170,7 +176,7 @@ window.addEventListener('load', function () {
 
   router.on('/:state', params => {
     selector.value = params.state;
-    show(params.state).catch(() => router.navigate('/'));
+    show(params.state).catch(() => navigate('/'));
   })
 
   router.resolve();
