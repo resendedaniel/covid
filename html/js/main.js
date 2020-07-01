@@ -124,11 +124,7 @@ window.addEventListener('load', function () {
     },
   })
 
-  const selector = document.getElementById('state-selector')
-
-  selector.addEventListener('change', async e => {
-    const state = e.target.value;
-
+  const show = async state => {
     const response = await fetch(`/html/data/transparencia_${state}.json`).then(r => r.json());
     _data = response.data;
 
@@ -156,7 +152,26 @@ window.addEventListener('load', function () {
       text: 'Corte de 14 dias',
       class: 'c3-grid-highlight'
     }])
+  }
+
+  const router = new Navigo(window.location.protocol + '//' + window.location.host);
+  const selector = document.getElementById('state-selector')
+
+  selector.addEventListener('change', e => {
+    const state = e.target.value;
+    const path = state === 'all' ? '/' : `/${state}`;
+    router.navigate(path);
   })
 
-  selector.dispatchEvent(new Event('change'));
+  router.on('/', () => {
+    selector.value = 'all';
+    show('all');
+  });
+
+  router.on('/:state', params => {
+    selector.value = params.state;
+    show(params.state).catch(() => router.navigate('/'));
+  })
+
+  router.resolve();
 });
