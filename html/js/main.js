@@ -158,8 +158,7 @@ window.addEventListener('load', function () {
   const selector = document.getElementById('state-selector')
 
   const navigate = path => {
-    ga('set', 'page', path);
-    ga('send', 'pageview');
+    gtag('config', GA_MEASUREMENT_ID, { 'page_path': path });
     router.navigate(path);
   }
 
