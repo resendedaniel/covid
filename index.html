@@ -33,6 +33,13 @@
       <h2>
         Número de mortes por causas naturais no Brasil
       </h2>
+      <div id="alert">
+        <strong>Atenção!</strong>
+        <br />
+        Apesar de atualizarmos os dados com frequência, eles ainda estão sujeitos ao atraso dos cartórios. Por via de regra, quanto mais recente o dia maior o atraso.
+        Clique <a href="#sobre-atraso">aqui</a> para mais detalhes.
+        <a id='close' href='#'>x</a>
+      </div>
       <select id="state-selector">
         <option value="all">Todos os estados</option>
         <option value="ac">Acre</option>
@@ -133,7 +140,7 @@
         <p>
           Esse aumento de mortes, independentemente do número de testes disponíveis, já é um sinal de alerta e levou muitos países a tomarem medidas drásticas de fechamento de fronteiras e de restrições de circulação de pessoas – algo, nessa escala, inédito na história recente do planeta.
         </p>
-        <h2>
+        <h2 id="sobre-atraso">
           Os dados do gráfico são confiáveis? São atualizados? De onde vêm?
         </h2>
         <p>

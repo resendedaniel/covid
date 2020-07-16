@@ -88,3 +88,23 @@ h2 {
     margin-bottom: 10px;
   }
 }
+
+#alert {
+    position: relative;
+    font-size: 12px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    border-radius: 10px;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}

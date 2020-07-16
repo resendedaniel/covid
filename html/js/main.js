@@ -179,4 +179,10 @@ window.addEventListener('load', function () {
   })
 
   router.resolve();
+
+  const closeAlert = document.getElementById('close');
+  closeAlert.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById("alert").style.display = 'none'
+  });
 });
