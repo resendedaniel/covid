@@ -33,20 +33,20 @@ def save_processed(data, state):
         'updated_date': dt.datetime.today().isoformat()
     }
 
-    covid_subset = data[data['covid_deaths_cum'] > 0]
-    covid_subset = covid_subset.dropna()
-    output['first_covid_death'] = covid_subset['d'].min().isoformat()
+    #covid_subset = data[data['covid_deaths_cum'] > 0]
+    #covid_subset = covid_subset.dropna()
+    #output['first_covid_death'] = covid_subset['d'].min().isoformat()
 
-    last_row = covid_subset.tail(1).to_dict(orient='records')[0]
-    output['excess_death_since_covid_abs'] = last_row['excess_cum']
-    output['excess_death_since_covid_rel'] = last_row['excess_cum'] / (last_row['deaths_cum'] - last_row['excess_cum'])
+    #last_row = covid_subset.tail(1).to_dict(orient='records')[0]
+    #output['excess_death_since_covid_abs'] = last_row['excess_cum']
+    #output['excess_death_since_covid_rel'] = last_row['excess_cum'] / (last_row['deaths_cum'] - last_row['excess_cum'])
 
-    covid_subset['daily_excess_rel'] = covid_subset['excess_mean'] / covid_subset['deaths_daily_mean']
-    max_excess = covid_subset.iloc[covid_subset['daily_excess_rel'].argmax()]
+    #covid_subset['daily_excess_rel'] = covid_subset['excess_mean'] / covid_subset['deaths_daily_mean']
+    #max_excess = covid_subset.iloc[covid_subset['daily_excess_rel'].argmax()]
 
-    output['peak_excess_d'] = max_excess['d'].isoformat()
-    output['peak_excess_abs'] = max_excess['excess_cum']
-    output['peak_excess_rel'] = max_excess['excess_cum'] / (max_excess['deaths_cum'] - max_excess['excess_cum'])
+    #output['peak_excess_d'] = max_excess['d'].isoformat()
+    #output['peak_excess_abs'] = max_excess['excess_cum']
+    #output['peak_excess_rel'] = max_excess['excess_cum'] / (max_excess['deaths_cum'] - max_excess['excess_cum'])
 
     data['d'] = data['d'].dt.strftime('%Y-%m-%d')
     output['data'] = [ v.dropna().to_dict() for k,v in data.iterrows() ]
@@ -73,9 +73,12 @@ def fetch_data(state='all', start_date='2018-01-01', end_date=dt.datetime.today(
     client.get('https://transparencia.registrocivil.org.br')
     xsrf_token = client.cookies['XSRF-TOKEN']
 
-    url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS'
+    # url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS'
+    # url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&city_id=all&state={}&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&chart=chart5'
+    url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&city_id=all&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&cidade_id_tipo=city&cor_pele=I'
     if state != 'all':
         state = state.upper()
+
     url = url.format(start_date, end_date, state)
     headers = {
         'Accept': 'application/json, text/plain, */*',
@@ -84,6 +87,7 @@ def fetch_data(state='all', start_date='2018-01-01', end_date=dt.datetime.today(
         'Connection': 'keep-alive',
         'Host': 'transparencia.registrocivil.org.br',
         'Referer': 'https://transparencia.registrocivil.org.br/registral-covid',
+        'recaptcha': '03AGdBq25ZkwEvzKzCPfaXB74_1B0jhMz9LxjpDAhCc6OiViUF3qsO2C5BMl2yncKwXRoWx7Ude06kK_pKcVs9lBq909WI6v9jEzz6mumntLeQvc1eZsHT9EAYbDhlnTynH47w9oYINhydm_AeJy03e3HJTuDjDD0ftE58UQsGB987kTj-lHKjOBrh05ilYDqu0meVH-MCc84YrCt4hQkUkhNp6RgKnUdnA74alVqRPJoyvTfQmVXbvSNWwgtDI-ewrulDGwcJbeT2zXHv4Okw_A4bE8X99Wuwm8qkRUv9MC35JBgEfD8SeC6GmTQT_J5APBgQUHamBfVBSosebi4NnuXI84ee5zT0dI6kKu8tpmbIZWvNTrw6TvkKsCRXLAFEcd_8ucYNPMFf_7zaJw_wY4IEXHT88JuX3kG7gcfMXr4Eaqgr8KhDLCY',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin',
@@ -124,7 +128,8 @@ def process_data(data, state, cutoff=14):
     df['deaths_daily_mean'] = df['deaths_daily'].rolling(7, min_periods=1).mean()
     df['deaths_cum'] = df.groupby('year')[['deaths_daily']].cumsum()
 
-    df = df[:-cutoff]
+    df = df[df['d'] <= dt.datetime.today() - dt.timedelta(days=cutoff)]
+    # df = df[:-cutoff]
 
     df['state'] = state
 

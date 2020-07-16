@@ -21,10 +21,11 @@ for state in STATES:
         data = transparencia.load_cache(state)
     else:
         data = transparencia.fetch_data(state)
+        transparencia.save_cache(data, state)
 
     data = transparencia.process_data(data, state)
     data = transparencia.bind_excess(data)
-    data = transparencia.bind_oficial_data(data, of_data, state)
+    # data = transparencia.bind_oficial_data(data, of_data, state)
     print(data.tail())
 
     transparencia.save_processed(data, state)
