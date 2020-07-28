@@ -75,7 +75,8 @@ def fetch_data(state='all', start_date='2018-01-01', end_date=dt.datetime.today(
 
     # url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS'
     # url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&city_id=all&state={}&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&chart=chart5'
-    url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&city_id=all&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&cidade_id_tipo=city&cor_pele=I'
+    # url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&state={}&city_id=all&chart=chart5&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&cidade_id_tipo=city&cor_pele=I'
+    url = 'https://transparencia.registrocivil.org.br/api/covid-covid-registral?start_date={}&end_date={}&city_id=all&state={}&places[]=HOSPITAL&places[]=DOMICILIO&places[]=VIA_PUBLICA&places[]=OUTROS&diffCity=false&cor_pele=I&chart=chart5'
     if state != 'all':
         state = state.upper()
 
