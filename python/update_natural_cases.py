@@ -13,7 +13,7 @@ def create_dirs():
 
 create_dirs()
 
-of_data = oficial.process_data(oficial.get_data())
+# of_data = oficial.process_data(oficial.get_data())
 
 STATES = ['all', 'ac', 'al', 'am', 'ap', 'ba', 'ce', 'df', 'es', 'go', 'ma', 'mg', 'ms', 'mt', 'pa', 'pb', 'pe', 'pi', 'pr', 'rj', 'rn', 'ro', 'rr', 'rs', 'sc', 'se', 'sp', 'to']
 for state in STATES:
