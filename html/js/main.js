@@ -105,7 +105,7 @@ window.addEventListener('load', function () {
       position: 'inset',
       inset: {
         anchor: 'top-right',
-        step: 4,
+        step: 5,
         x: 20,
       },
     },
