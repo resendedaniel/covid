@@ -13,6 +13,7 @@ const extract_years = data => ({
   '2019': extract(2019, data),
   '2020': extract(2020, data),
   '2021': extract(2021, data),
+  '2022': extract(2022, data),
 });
 const values = data => data.filter((d) => d.deaths_daily_mean).map(d => d.deaths_daily_mean);
 const order = data => data.filter((d) => d.deaths_daily_mean).map(d => d.d).map(ordinal);
@@ -53,12 +54,14 @@ window.addEventListener('load', function () {
         '2019': '2019_order',
         '2020': '2020_order',
         '2021': '2021_order',
+        '2022': '2022_order',
       },
       colors: {
         '2018': '#A6CEE3',
         '2019': '#2377B4',
         '2020': '#F57E0D',
         '2021': '#E3221C',
+        '2022': '#E3A71C',
       },
     },
     axis: {
@@ -66,18 +69,18 @@ window.addEventListener('load', function () {
         tick: {
           format: xTickFormat,
           values: [
-            ordinal('2021-01-01'),
-            ordinal('2021-02-01'),
-            ordinal('2021-03-01'),
-            ordinal('2021-04-01'),
-            ordinal('2021-05-01'),
-            ordinal('2021-06-01'),
-            ordinal('2021-07-01'),
-            ordinal('2021-08-01'),
-            ordinal('2021-09-01'),
-            ordinal('2021-10-01'),
-            ordinal('2021-11-01'),
-            ordinal('2021-12-01'),
+            ordinal('2022-01-01'),
+            ordinal('2022-02-01'),
+            ordinal('2022-03-01'),
+            ordinal('2022-04-01'),
+            ordinal('2022-05-01'),
+            ordinal('2022-06-01'),
+            ordinal('2022-07-01'),
+            ordinal('2022-08-01'),
+            ordinal('2022-09-01'),
+            ordinal('2022-10-01'),
+            ordinal('2022-11-01'),
+            ordinal('2022-12-01'),
           ],
         },
       },
@@ -145,6 +148,8 @@ window.addEventListener('load', function () {
         ['2020_order', ...order(years['2020'])],
         ['2021', ...values(years['2021'])],
         ['2021_order', ...order(years['2021'])],
+        ['2022', ...values(years['2022'])],
+        ['2022_order', ...order(years['2022'])],
       ],
     })
 
