@@ -14,6 +14,7 @@ const extract_years = data => ({
   '2020': extract(2020, data),
   '2021': extract(2021, data),
   '2022': extract(2022, data),
+  '2023': extract(2023, data),
 });
 const values = data => data.filter((d) => d.deaths_daily_mean).map(d => d.deaths_daily_mean);
 const order = data => data.filter((d) => d.deaths_daily_mean).map(d => d.d).map(ordinal);
@@ -55,6 +56,7 @@ window.addEventListener('load', function () {
         '2020': '2020_order',
         '2021': '2021_order',
         '2022': '2022_order',
+        '2023': '2023_order',
       },
       colors: {
         '2018': '#A6CEE3',
@@ -62,6 +64,7 @@ window.addEventListener('load', function () {
         '2020': '#F57E0D',
         '2021': '#E3221C',
         '2022': '#E3A71C',
+        '2023': '#CEE21B',
       },
     },
     axis: {
@@ -69,18 +72,18 @@ window.addEventListener('load', function () {
         tick: {
           format: xTickFormat,
           values: [
-            ordinal('2022-01-01'),
-            ordinal('2022-02-01'),
-            ordinal('2022-03-01'),
-            ordinal('2022-04-01'),
-            ordinal('2022-05-01'),
-            ordinal('2022-06-01'),
-            ordinal('2022-07-01'),
-            ordinal('2022-08-01'),
-            ordinal('2022-09-01'),
-            ordinal('2022-10-01'),
-            ordinal('2022-11-01'),
-            ordinal('2022-12-01'),
+            ordinal('2023-01-01'),
+            ordinal('2023-02-01'),
+            ordinal('2023-03-01'),
+            ordinal('2023-04-01'),
+            ordinal('2023-05-01'),
+            ordinal('2023-06-01'),
+            ordinal('2023-07-01'),
+            ordinal('2023-08-01'),
+            ordinal('2023-09-01'),
+            ordinal('2023-10-01'),
+            ordinal('2023-11-01'),
+            ordinal('2023-12-01'),
           ],
         },
       },
@@ -150,6 +153,8 @@ window.addEventListener('load', function () {
         ['2021_order', ...order(years['2021'])],
         ['2022', ...values(years['2022'])],
         ['2022_order', ...order(years['2022'])],
+        ['2023', ...values(years['2023'])],
+        ['2023_order', ...order(years['2023'])],
       ],
     })
 
